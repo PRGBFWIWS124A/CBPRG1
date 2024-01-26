@@ -2,6 +2,7 @@ import java.nio.charset.CoderResult;
 
 public class Battleship {
     final static int SIZE = 10;
+    final static String ENTER_SHIP_COORDINATE_PROMPT = "Geben sie die %s für ein Schiff der Länge %d ein: ";
 
     static void main(String[] args) {
 
@@ -31,14 +32,14 @@ public class Battleship {
 
     static int getMaxSurroundingColumn(final Coordinate start, final Coordinate end) {
         if (start.column() >= end.column()) {
-            if (start.column() == 9) {
-                return 9;
+            if (start.column() == SIZE - 1) {
+                return SIZE - 1;
             } else {
                 return start.column() + 1;
             }
         } else {
-            if (end.column() == 9) {
-                return 9;
+            if (end.column() == SIZE - 1) {
+                return SIZE - 1;
             } else {
                 return end.column() + 1;
             }
@@ -63,14 +64,14 @@ public class Battleship {
 
     static int getMaxSurroundingRow(final Coordinate start, final Coordinate end) {
         if (start.row() >= end.row()) {
-            if (start.row() == 9) {
-                return 9;
+            if (start.row() == SIZE - 1) {
+                return SIZE - 1;
             } else {
                 return start.row() + 1;
             }
         } else {
-            if (end.row() == 9) {
-                return 9;
+            if (end.row() == SIZE - 1) {
+                return SIZE - 1;
             } else {
                 return end.row() + 1;
             }
@@ -91,5 +92,38 @@ public class Battleship {
                 return end.row() - 1;
             }
         }
+    }
+
+    static Coordinate toCoordinate(final String input) {
+        char temp = input.toUpperCase().charAt(0);
+        int r = temp - 65;
+        int c;
+        if (input.length() == 2) {
+            c = input.charAt(1);
+        } else {
+            c = SIZE - 1;
+        }
+        return new Coordinate(c, r);
+    }
+
+    static boolean isValidCoordinate(final String input) {
+        String temp = input.toUpperCase();
+        char letter = temp.charAt(0);
+        if (letter >= 65 && letter <= 90) {
+            temp = temp.substring(1);
+            if (Integer.parseInt(temp) >= 1 && Integer.parseInt(temp) <= 10) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    static String getStartCoordinatePrompt(final int length) {
+        return String.format(ENTER_SHIP_COORDINATE_PROMPT, "Startkoordinaten", length);
+    }
+
+    static String getEndCoordinatePrompt(final int length) {
+        return String.format(ENTER_SHIP_COORDINATE_PROMPT, "Endkoordinaten", length);
     }
 }
