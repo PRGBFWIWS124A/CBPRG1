@@ -16,10 +16,13 @@ public class Battleship {
         return new Coordinate(Utility.getRandomInt(SIZE), Utility.getRandomInt(SIZE));
     }
 
+    // Kürzere Schreibweise:
+    // static boolean  inOneLine(final Coordinate start, final Coordinate end) {
+    // return (start.column() == end.column() || start.row == end.wor());
+    // }
+    //Einfach die Bedingung die normalerweise in die Klammer der If-Abfrage kommt hinter das return schreiben.
     static boolean inOneLine(final Coordinate start, final Coordinate end) {
-        if (start.column() == end.column()) {
-            return true;
-        } else if (start.row() == end.row()) {
+        if (start.column() == end.column() || start.row() == end.row()) {
             return true;
         } else {
             return false;
@@ -96,23 +99,25 @@ public class Battleship {
 
     static Coordinate toCoordinate(final String input) {
         char temp = input.toUpperCase().charAt(0);
-        int r = temp - 65;
-        int c;
+        int c = temp - 65;
+        int r;
         if (input.length() == 2) {
-            c = input.charAt(1);
+            r = input.charAt(1) - 1;
         } else {
-            c = SIZE - 1;
+            r = SIZE - 1;
         }
         return new Coordinate(c, r);
     }
 
     static boolean isValidCoordinate(final String input) {
-        String temp = input.toUpperCase();
-        char letter = temp.charAt(0);
-        if (letter >= 65 && letter <= 90) {
-            temp = temp.substring(1);
-            if (Integer.parseInt(temp) >= 1 && Integer.parseInt(temp) <= 10) {
-                return true;
+        if (input.length() >= 2) {
+            String temp = input.toUpperCase();
+            char letter = temp.charAt(0);
+            if (letter >= 'A' && letter <= 'J') {
+                temp = temp.substring(1);
+                if (Integer.parseInt(temp) >= 1 && Integer.parseInt(temp) <= 10) {
+                    return true;
+                }
             }
         }
         return false;
