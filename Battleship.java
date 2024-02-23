@@ -131,4 +131,126 @@ public class Battleship {
     static String getEndCoordinatePrompt(final int length) {
         return String.format(ENTER_SHIP_COORDINATE_PROMPT, "Endkoordinaten", length);
     }
+
+    static void showRowNumber (final int row) {
+        if (row <= 8) {
+            int temp = row + 1;
+            System.out.print(" " + temp);
+        }
+        else {
+            System.out.print("10");
+        }
+    }
+
+    static Coordinate getRandomEndCoordinate(final Coordinate start, final int distance) {
+        boolean tf = false;
+        while (!tf) {
+            int temp = Utility.getRandomInt(4);
+            switch (temp) {
+                case 0:
+                    if ((start.row() - distance) >= 0) {
+                        return new Coordinate(start.column(), (start.row() - distance));
+                    }
+                    break;
+                case 1:
+                    if ((start.row() + distance) <= SIZE - 1) {
+                        return new Coordinate(start.column(), (start.row() + distance));
+                    }
+                    break;
+                case 2:
+                    if ((start.column() - distance) >= 0) {
+                        return new Coordinate((start.column() - distance), start.row());
+                    }
+                    break;
+                case 3:
+                    if ((start.column() + distance) <= SIZE - 1) {
+                        return new Coordinate((start.column() + distance), start.row());
+                    }
+                    break;
+            }
+        }
+        return null;
+    }
+
+    static void showField(final Field field, final boolean showShips) {
+        switch (field) {
+            case FREE:
+                System.out.print("o");
+                break;
+            case SHIP:
+                if (!showShips) {
+                    System.out.print(" ");
+                } else {
+                    System.out.print("o");
+                }
+                break;
+            case SHIP_HIT:
+                System.out.print("*");
+                break;
+            case WATER_HIT:
+                System.out.print("x");
+                break;
+        }
+    }
+
+    static void shot(final Coordinate shot, final Field[][] field) {
+        if (field[shot.column()][shot.row()] == Field.FREE) {
+            field[shot.column()][shot.row()] = Field.WATER_HIT;
+        } else if (field[shot.column()][shot.row()] == Field.SHIP) {
+            field[shot.column()][shot.row()] = Field.SHIP_HIT;
+        }
+    }
+
+    static void placeShip (final Coordinate start, final Coordinate end, final Field[][] field) {
+        if (start.row() == end.row()) {
+            if (start.column() < end.column()) {
+                for (int i = start.column(); i < end.column(); i++) {
+                    field[i][start.row()] = Field.SHIP;
+                }
+            } else {
+                for (int i = end.column(); i < start.column(); i++) {
+                    field[i][start.row()] = Field.SHIP;
+                }
+            }
+        } else {
+            if (start.row() < end.row()) {
+                for (int i = start.row(); i < end.row(); i++) {
+                    field[start.column()][i] = Field.SHIP;
+                }
+            } else {
+                for (int i = end.row(); i < start.row(); i++) {
+                    field[start.column()][i] = Field.SHIP;
+                }
+            }
+        }
+    }
+
+    static void showRow(final int row, final Field[][] ownField, final Field[][] otherField) {
+        showRowNumber(row);
+        System.out.print(" |");
+        for (int i = 0; i < SIZE - 1; i++) {
+            showField(ownField[i][row], true);
+            System.out.print("|");
+        }
+        System.out.print("   ");
+        showRowNumber(row);
+        for (int i = 0; i < SIZE - 1; i++) {
+            showField(otherField[i][row], false);
+            System.out.println("|");
+        }
+    }
+
+    static void showFields(final Field[][] ownField, final Field[][] otherField) {
+        System.out.println("    A B C D E F G H I J        A B C D E F G H I J");
+        showSeparatorLane();
+        for (int i = 0; i < SIZE - 1; i++) {
+            showRow(i, ownField, otherField);
+        }
+        showSeparatorLane();
+        System.out.println(" ");
+    }
+
+    static boolean shipSunk(final Coordinate shot, final Field[][] field) {
+
+    }
 }
